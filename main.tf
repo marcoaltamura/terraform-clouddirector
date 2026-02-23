@@ -6,7 +6,7 @@ provider "vcd" {
   org                  = "System"
   url                  = var.vcd_api_url
   max_retry_timeout    = 60
-  allow_unverified_ssl = false
+  allow_unverified_ssl = false 
 }
 
 resource "random_password" "org_user_password" {
@@ -26,12 +26,12 @@ resource "vcd_org" "brand_new_org" {
   deployed_vm_quota = 20
   can_publish_catalogs = true
 
-   metadata_entry {
+  metadata_entry {
     key         = "email.techsupport"
     value       = var.customer_organization_techsupportemail
     type        = "MetadataStringValue"
     user_access = "READONLY"
-    is_system   = false
+    is_system   = true
   }
 }
 
@@ -43,21 +43,24 @@ resource "vcd_org_vdc" "brand_new_vdc" {
   allocation_model  = "Flex"
   network_pool_name = var.vcd_network_pool      # Change to your actual Network Pool name
   provider_vdc_name = var.vcd_provider    # Change to your actual pVDC name
+  elasticity = true
+  include_vm_memory_overhead = true
+  memory_guaranteed = 0.1
 
   compute_capacity {
     cpu {
-      allocated = 2000 # MHz
-      limit = 2000
+      allocated = var.customer_datacenter_cpu_quota # MHz
+      limit = var.customer_datacenter_cpu_quota
     }
     memory {
-      allocated = 4096 # MB
-      limit = 4096
+      allocated = var.customer_datacenter_memory_quota # MB
+      limit = var.customer_datacenter_memory_quota
     }
   }
 
   storage_profile {
     name    = var.customer_datacenter_storage_profile       # Change to your actual Storage Profile
-    limit   = 10240                    # MB
+    limit   = var.customer_datacenter_storage_quota                    # MB
     default = true
   }
 
