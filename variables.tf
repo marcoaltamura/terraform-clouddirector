@@ -49,6 +49,10 @@ variable "customer_datacenter_name" {
   type = string
 }
 
+variable "customer_datacenter_cpu_speed" {
+  type = number
+  description = "in MHz"
+}
 variable "customer_datacenter_cpu_quota" {
   type = number
   description = "in MHz"

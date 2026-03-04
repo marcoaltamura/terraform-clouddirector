@@ -20,11 +20,17 @@ resource "vcd_org" "brand_new_org" {
   name             = var.customer_organization_name
   full_name        = var.customer_organization_fullname
   is_enabled       = true
-  delete_recursive = true
-  delete_force     = true
-
-  deployed_vm_quota = 20
-  can_publish_catalogs = true
+  
+  vapp_lease {
+    maximum_runtime_lease_in_sec = 0
+    delete_on_storage_lease_expiration = false
+    maximum_storage_lease_in_sec = 0
+    power_off_on_runtime_lease_expiration = false
+  }
+  vapp_template_lease {
+    maximum_storage_lease_in_sec = 0
+    delete_on_storage_lease_expiration = false
+  }
 
   metadata_entry {
     key         = "email.techsupport"
@@ -39,13 +45,21 @@ resource "vcd_org" "brand_new_org" {
 resource "vcd_org_vdc" "brand_new_vdc" {
   name        = var.customer_datacenter_name
   org         = vcd_org.brand_new_org.name
+  depends_on = [ vcd_org.brand_new_org ]
 
+  enabled = true
   allocation_model  = "Flex"
   network_pool_name = var.vcd_network_pool      # Change to your actual Network Pool name
   provider_vdc_name = var.vcd_provider    # Change to your actual pVDC name
-  elasticity = true
-  include_vm_memory_overhead = true
+  elasticity = false
+  include_vm_memory_overhead = false
   memory_guaranteed = 0.1
+  cpu_guaranteed = 0
+  cpu_speed = var.customer_datacenter_cpu_speed
+  vm_quota = 0
+  network_quota = 10
+  enable_thin_provisioning = true
+  enable_fast_provisioning = false
 
   compute_capacity {
     cpu {
@@ -64,11 +78,10 @@ resource "vcd_org_vdc" "brand_new_vdc" {
     default = true
   }
 
-  enabled = true
 }
 
-
 resource "vcd_org_user" "org_admin" {
+  depends_on = [ random_password.org_user_password ]
   org         = vcd_org.brand_new_org.name
   name        = var.customer_organization_user
   password    = random_password.org_user_password.result
