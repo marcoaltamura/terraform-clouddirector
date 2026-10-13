@@ -1,0 +1,20 @@
+# Cloud Director connection
+vcd_system_user     = "replace-with-system-user"
+vcd_system_password = "replace-with-system-password"
+vcd_api_url         = "https://cloud-director.example.com/api"
+vcd_network_pool    = "replace-with-network-pool-name"
+vcd_provider        = "replace-with-provider-vdc-name"
+
+# Customer organization
+customer_organization_name             = "example-customer"
+customer_organization_fullname         = "Example Customer"
+customer_organization_user             = "example-admin"
+customer_organization_techsupportemail = "support@example.com"
+
+# Customer virtual datacenter
+customer_datacenter_name             = "example-datacenter"
+customer_datacenter_cpu_speed        = 2000
+customer_datacenter_cpu_quota        = 8000
+customer_datacenter_memory_quota     = 16384
+customer_datacenter_storage_quota    = 262144
+customer_datacenter_storage_profile = "replace-with-storage-profile-name"
