@@ -1,5 +1,3 @@
-# variables.tf
-
 # CLOUD DIRECTOR VARIABLES
 
 variable "vcd_system_user" {
@@ -71,6 +69,3 @@ variable "customer_datacenter_storage_quota" {
 variable "customer_datacenter_storage_profile" {
   type = string
 }
-
-# DEFAULT SETTINGS TO APPLY
-
